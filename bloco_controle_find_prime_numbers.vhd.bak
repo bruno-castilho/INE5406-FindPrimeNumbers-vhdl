@@ -1,0 +1,23 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use work.Pkg_salva_le_vetor_BC_Estado.all;
+
+entity bloco_controle_find_prime_numbers is
+	port (
+		-- control inputs
+		clk: in std_logic;
+		reset_req: in std_logic;
+		chipselect: in std_logic;
+		readd: in std_logic;
+		writee: in std_logic;
+		-- status from OperativeBlock
+		sttIMenorTam, sttMaxdadoMenorVetori: in std_logic;
+		-- control outputs
+		interrupt: out std_logic;
+		-- commands to OperativeBlock
+		cmdSetTam, cmdResetI, cmdSetI, cmdResetMaxpos, cmdSetMaxpos, cmdSetMaxdado, cmdSetVetorI, 
+				cmdSelectMaxdado: out std_logic;
+		cmdSelectOutput: out std_logic_vector(1 downto 0);
+		testEstadoAtual: out Estado
+	);
+end entity;

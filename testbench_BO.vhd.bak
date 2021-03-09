@@ -1,0 +1,55 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use work.Pkg_find_prime_numbers_BC_Estado.all;
+
+entity testbench_BO is
+	generic(	
+		latencia: time := 1 ns;
+		dataWidth: positive := 4;
+		addressWidth: positive := 4
+	);
+end entity;
+
+architecture arch of testbench_BO is
+
+component bloco_operativo_find_prime_numbers is
+	generic(
+		dataWidth: positive := 32;
+		addressWidth: positive := 8
+	);
+	port (
+		-- control inputs
+		clk		: in std_logic;
+		reset_req: in std_logic;
+		-- data inputs
+		address	: IN STD_LOGIC_VECTOR (addressWidth-1 DOWNTO 0);
+		writedata: IN STD_LOGIC_VECTOR (dataWidth-1 DOWNTO 0);
+		-- data outputs
+		readdata	: OUT STD_LOGIC_VECTOR (dataWidth-1 DOWNTO 0);
+		-- commands from OperativeBlock
+		cmdSetAteN, cmdSetI, cmdResetNotPrimo, cmdSetNotPrimo, cmdSetDivisor, cmdSetDividendo, 
+		cmdSetVetorI, cmdSetOutput, cmdSelectI, cmdSelectDivisor, cmdSelectDividendo: in std_logic;
+		-- status to OperativeBlock
+		sttiMenorIgualAteN, sttDividendoMaiorIgualDivisor, sttDivisorMenorI, sttDividendoIgualZero, sttVetorI: out std_logic
+	);
+end component;
+
+signal clk, reset_req, chipselect, readd, writee, interrupt: std_logic;
+signal sttiMenorIgualAteN, sttDividendoMaiorIgualDivisor, sttDivisorMenorI, sttDividendoIgualZero, sttVetorI:  std_logic;
+signal cmdSetAteN, cmdSetI, cmdResetNotPrimo, cmdSetNotPrimo, cmdSetDivisor, cmdSetDividendo, cmdSetVetorI, cmdSetOutput, cmdSelectI, cmdSelectDivisor, cmdSelectDividendo: std_logic;
+signal testEstadoAtual: Estado;
+begin
+		utt: bloco_controle_find_prime_numbers
+		port map (clk, reset_req, chipselect, readd, writee, sttiMenorIgualAteN, sttDividendoMaiorIgualDivisor, 
+						sttDivisorMenorI, sttDividendoIgualZero, sttVetorI, interrupt, cmdSetAteN, cmdSetI, cmdResetNotPrimo, 
+						cmdSetNotPrimo, cmdSetDivisor, cmdSetDividendo, cmdSetVetorI, cmdSetOutput, cmdSelectI, cmdSelectDivisor, 
+						cmdSelectDividendo, testEstadoAtual
+					);
+			
+stimulus: process
+		begin	
+			wait;
+
+	end process;
+end architecture;

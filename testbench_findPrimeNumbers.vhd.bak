@@ -1,0 +1,54 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use work.Pkg_find_prime_numbers_BC_Estado.all;
+
+
+entity testbench_findPrimeNumbers is
+	generic(	
+		latencia: time := 1 ns;
+		dataWidth: positive := 4;
+		addressWidth: positive := 4
+	);
+end entity;
+
+architecture arch of testbench_findPrimeNumbers is
+
+component findPrimeNumbers is
+	generic(
+		dataWidth: positive := 8;
+		addressWidth: positive := 6
+	);
+	port(
+		-- control inputs
+		clk: in std_logic;
+		reset_req: in std_logic;
+		chipselect: in std_logic;
+		readd: in std_logic;
+		writee: in std_logic;
+		-- data inputs
+		address: in std_logic_vector(addressWidth-1 downto 0);
+		writedata: in std_logic_vector(dataWidth-1 downto 0);
+		-- control outputs
+		interrupt: out std_logic;
+		-- data outputs
+		readdata: out std_logic_vector(dataWidth-1 downto 0);
+		testEstadoAtual: out Estado
+	);
+end component;
+
+signal clk, reset_req, chipselect, readd, writee, interrupt std_logic;
+signal address:  std_logic_vector(addressWidth-1 downto 0);
+signal writedata:  std_logic_vector(dataWidth-1 downto 0);
+signal testEstadoAtual:  Estado
+
+
+begin
+		utt: findPrimeNumbers
+		generic map (dataWidth, addressWidth)
+		port map (clk, reset_req, address, writedata, readdata, cmdSetAteN, cmdSetI, cmdResetNotPrimo, cmdSetNotPrimo, 
+					cmdSetDivisor, cmdSetDividendo, cmdSetVetorI, cmdSetOutput, cmdSelectI, cmdSelectDivisor, cmdSelectDividendo,
+					sttiMenorIgualAteN, sttDividendoMaiorIgualDivisor, sttDivisorMenorI, sttDividendoIgualZero, sttVetorI
+		);
+			
+end architecture;

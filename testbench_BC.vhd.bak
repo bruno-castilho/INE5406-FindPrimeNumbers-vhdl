@@ -1,0 +1,56 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use work.Pkg_find_prime_numbers_BC_Estado.all;
+
+entity testbench_BC is
+	generic(	
+		latencia: time := 1 ns;
+		dataWidth: positive := 4;
+		addressWidth: positive := 4
+	);
+end entity;
+
+architecture arch of testbench_BC is
+
+component bloco_controle_find_prime_numbers is
+	port (
+		-- control inputs
+		clk: in std_logic;
+		reset_req: in std_logic;
+		chipselect: in std_logic;
+		readd: in std_logic;
+		writee: in std_logic;
+		-- status from OperativeBlock
+		sttiMenorIgualAteN, sttDividendoMaiorIgualDivisor, sttDivisorMenorI, sttDividendoIgualZero, sttVetorI: in std_logic;
+		-- control outputs
+		interrupt: out std_logic;
+		-- commands to OperativeBlock
+		cmdSetAteN, cmdSetI, cmdResetNotPrimo, cmdSetNotPrimo, cmdSetDivisor, cmdSetDividendo, 
+		cmdSetVetorI, cmdSetOutput, cmdSelectI, cmdSelectDivisor, cmdSelectDividendo: out std_logic;
+		estadoAtual: Estado
+	);
+end component;
+
+signal clk, reset_req, chipselect, readd, writee, interrupt: std_logic;
+signal sttiMenorIgualAteN, sttDividendoMaiorIgualDivisor, sttDivisorMenorI, sttDividendoIgualZero, sttVetorI:  std_logic;
+signal cmdSetAteN, cmdSetI, cmdResetNotPrimo, cmdSetNotPrimo, cmdSetDivisor, cmdSetDividendo, cmdSetVetorI, cmdSetOutput, cmdSelectI, cmdSelectDivisor, cmdSelectDividendo: std_logic
+
+begin
+		utt: bloco_controle_find_prime_numbers
+		generic map (dataWidth, addressWidth)
+		port map (clk, reset_req, chipselect, readd, writee, sttiMenorIgualAteN, sttDividendoMaiorIgualDivisor, 
+						sttDivisorMenorI, sttDividendoIgualZero, sttVetorI, interrupt, cmdSetAteN, cmdSetI, cmdResetNotPrimo, 
+						cmdSetNotPrimo, cmdSetDivisor, cmdSetDividendo, cmdSetVetorI, cmdSetOutput, cmdSelectI, cmdSelectDivisor, 
+						cmdSelectDividendo, estadoAtual
+					);
+			
+stimulus: process
+		begin
+			reset_req <= '1';
+			wait for latencia;
+			assert estadoAtual=SL01 report "Ferrou" severity error;
+				
+			wait;
+	end process;
+end architecture;
